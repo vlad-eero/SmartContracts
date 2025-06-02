@@ -15,8 +15,8 @@ WORKDIR /app
 RUN forge init
 
 # Install OpenZeppelin and forge-std as dependencies
-RUN forge install OpenZeppelin/openzeppelin-contracts@v4.9.0 && \
-    forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v4.9.0 && \
+RUN forge install OpenZeppelin/openzeppelin-contracts@v5.0.0 && \
+    forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.0 && \
     forge install foundry-rs/forge-std
 
 # Add remappings for easier imports
