@@ -27,13 +27,9 @@ contract DeployAssetTokenScript is Script {
 
         // Deploy proxy via AssetDeployer
         console.log("Deploying AssetToken proxy...");
-        address proxy = deployerContract.deployAssetToken(
-            address(tokenImpl),
-            "MyToken",
-            "MTK"
-        );
+        address proxy = deployerContract.deployAssetToken(address(tokenImpl), "MyToken", "MTK");
         console.log("AssetToken proxy deployed at:", proxy);
 
         vm.stopBroadcast();
     }
-} 
+}

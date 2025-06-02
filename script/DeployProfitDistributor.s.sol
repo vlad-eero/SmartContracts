@@ -21,4 +21,4 @@ contract DeployProfitDistributorScript is Script {
 
         vm.stopBroadcast();
     }
-} 
+}

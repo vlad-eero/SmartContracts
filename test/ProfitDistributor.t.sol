@@ -9,6 +9,7 @@ contract ProfitDistributorTest is Test {
     // Define events from ProfitDistributor to use in tests
     event ProfitReceived(address indexed from, uint256 amount);
     event ProfitClaimed(address indexed to, uint256 amount);
+
     ProfitDistributor public profitDistributor;
     MockERC20 public shares;
     MockERC20 public usdc;
@@ -48,11 +49,11 @@ contract ProfitDistributorTest is Test {
         uint256 amount = 100e6;
         vm.startPrank(profitDepositor);
         usdc.approve(address(profitDistributor), amount);
-        
+
         vm.expectEmit(true, true, true, true);
         emit ProfitReceived(profitDepositor, amount);
         profitDistributor.depositProfit(amount);
-        
+
         assertEq(profitDistributor.totalReceived(), amount);
         vm.stopPrank();
     }
@@ -122,4 +123,4 @@ contract ProfitDistributorTest is Test {
         profitDistributor.setProfitDepositor(newDepositor);
         vm.stopPrank();
     }
-} 
+}

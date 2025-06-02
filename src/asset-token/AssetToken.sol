@@ -19,7 +19,13 @@ interface IProfitDistributor {
  * @title AssetToken
  * @notice ERC20 upgradable token with strict policies for upgrade, mint, and burn. Only the owner can perform these actions.
  */
-contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
+contract AssetToken is
+    Initializable,
+    ERC20Upgradeable,
+    UUPSUpgradeable,
+    OwnableUpgradeable,
+    ReentrancyGuardUpgradeable
+{
     address public profitDistributor;
     IAssetTokenPolicy public policy;
 
@@ -36,11 +42,11 @@ contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, Ownable
      * @param _symbol The symbol of the token.
      * @param owner The owner of the token.
      */
-    function initialize(string memory _name, string memory _symbol, address owner) initializer public {
-      __ERC20_init(_name, _symbol);
-      __Ownable_init(owner);
-      __UUPSUpgradeable_init();
-      __ReentrancyGuard_init();
+    function initialize(string memory _name, string memory _symbol, address owner) public initializer {
+        __ERC20_init(_name, _symbol);
+        __Ownable_init(owner);
+        __UUPSUpgradeable_init();
+        __ReentrancyGuard_init();
     }
 
     /**
@@ -97,10 +103,10 @@ contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, Ownable
         if (address(policy) != address(0)) {
             require(policy.canTransfer(from, to, amount), "Transfer not allowed by policy");
         }
-        
+
         // 2. Effects - update internal state
         super._update(from, to, amount);
-        
+
         // 3. Interactions - external calls after state changes
         if (profitDistributor != address(0)) {
             try IProfitDistributor(profitDistributor).updateReward(from, to) {
@@ -109,9 +115,9 @@ contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, Ownable
                 revert("ProfitDistributor update failed");
             }
         }
-        
+
         if (address(policy) != address(0)) {
             policy.recordReceived(from, to);
         }
     }
-}       
+}

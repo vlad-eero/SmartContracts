@@ -29,14 +29,10 @@ contract ProfitDistributorDeployerTest is Test {
 
     function test_DeployProfitDistributor() public {
         vm.startPrank(owner);
-        
+
         // Deploy new ProfitDistributor
-        address proxyAddress = deployer.deployProfitDistributor(
-            address(implementation),
-            address(shares),
-            address(usdc),
-            profitDepositor
-        );
+        address proxyAddress =
+            deployer.deployProfitDistributor(address(implementation), address(shares), address(usdc), profitDepositor);
 
         // Verify proxy was created correctly
         ProfitDistributor proxy = ProfitDistributor(proxyAddress);
@@ -50,24 +46,14 @@ contract ProfitDistributorDeployerTest is Test {
     function test_DeployProfitDistributorWithInvalidImplementation() public {
         vm.startPrank(owner);
         vm.expectRevert();
-        deployer.deployProfitDistributor(
-            address(0),
-            address(shares),
-            address(usdc),
-            profitDepositor
-        );
+        deployer.deployProfitDistributor(address(0), address(shares), address(usdc), profitDepositor);
         vm.stopPrank();
     }
 
     function test_DeployProfitDistributorWithInvalidTokens() public {
         vm.startPrank(owner);
         vm.expectRevert();
-        deployer.deployProfitDistributor(
-            address(implementation),
-            address(0),
-            address(usdc),
-            profitDepositor
-        );
+        deployer.deployProfitDistributor(address(implementation), address(0), address(usdc), profitDepositor);
         vm.stopPrank();
     }
 
@@ -76,14 +62,10 @@ contract ProfitDistributorDeployerTest is Test {
         vm.assume(sharesAddr != address(0));
         vm.assume(usdcAddr != address(0));
         vm.assume(depositor != address(0));
-        
+
         vm.startPrank(owner);
-        address proxyAddress = deployer.deployProfitDistributor(
-            address(implementation),
-            sharesAddr,
-            usdcAddr,
-            depositor
-        );
+        address proxyAddress =
+            deployer.deployProfitDistributor(address(implementation), sharesAddr, usdcAddr, depositor);
 
         ProfitDistributor proxy = ProfitDistributor(proxyAddress);
         assertEq(address(proxy.shares()), sharesAddr);
@@ -91,4 +73,4 @@ contract ProfitDistributorDeployerTest is Test {
         assertEq(proxy.profitDepositor(), depositor);
         vm.stopPrank();
     }
-} 
+}

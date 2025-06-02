@@ -31,4 +31,4 @@ contract SetPolicyAndProfitDistributorScript is Script {
 
         vm.stopBroadcast();
     }
-} 
+}

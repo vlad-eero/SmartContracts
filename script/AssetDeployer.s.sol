@@ -39,11 +39,7 @@ contract AssetDeployerScript is Script {
 
         // 5. Deploy proxy via AssetDeployer and set policy and profit distributor
         console.log("Deploying AssetToken proxy...");
-        address proxy = deployer.deployAssetToken(
-            address(tokenImpl),
-            "MyToken",
-            "MTK"
-        );
+        address proxy = deployer.deployAssetToken(address(tokenImpl), "MyToken", "MTK");
         console.log("AssetToken proxy deployed at:", proxy);
 
         // 6. Set policy and profit distributor in AssetToken
@@ -54,4 +50,4 @@ contract AssetDeployerScript is Script {
 
         vm.stopBroadcast();
     }
-} 
+}

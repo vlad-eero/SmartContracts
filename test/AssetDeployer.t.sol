@@ -37,13 +37,9 @@ contract AssetDeployerTest is Test {
     // Test pentru deployAssetToken
     function test_DeployAssetToken() public {
         vm.startPrank(owner);
-        
+
         // Deployăm un nou token
-        address proxyAddress = assetDeployer.deployAssetToken(
-            address(assetTokenImplementation),
-            "Test Token",
-            "TEST"
-        );
+        address proxyAddress = assetDeployer.deployAssetToken(address(assetTokenImplementation), "Test Token", "TEST");
 
         // Verificăm că proxy-ul a fost creat corect
         AssetToken proxy = AssetToken(proxyAddress);
@@ -58,11 +54,7 @@ contract AssetDeployerTest is Test {
     function test_DeployAssetTokenAsNonOwner() public {
         vm.startPrank(addr1);
         vm.expectRevert();
-        assetDeployer.deployAssetToken(
-            address(assetTokenImplementation),
-            "Test Token",
-            "TEST"
-        );
+        assetDeployer.deployAssetToken(address(assetTokenImplementation), "Test Token", "TEST");
         vm.stopPrank();
     }
 
@@ -70,11 +62,7 @@ contract AssetDeployerTest is Test {
     function test_DeployAssetTokenWithInvalidImplementation() public {
         vm.startPrank(owner);
         vm.expectRevert();
-        assetDeployer.deployAssetToken(
-            address(0),
-            "Test Token",
-            "TEST"
-        );
+        assetDeployer.deployAssetToken(address(0), "Test Token", "TEST");
         vm.stopPrank();
     }
-} 
+}

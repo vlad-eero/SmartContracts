@@ -49,12 +49,15 @@ contract ProfitDistributor is Initializable, OwnableUpgradeable, UUPSUpgradeable
      * @param usdcAddress The address of the USDC contract.
      * @param _profitDepositor The address authorized to deposit profit.
      */
-    function initialize(address sharesAddress, address usdcAddress, address _profitDepositor, address owner) public initializer {
+    function initialize(address sharesAddress, address usdcAddress, address _profitDepositor, address owner)
+        public
+        initializer
+    {
         require(sharesAddress != address(0), "Shares address cannot be 0");
         require(usdcAddress != address(0), "USDC address cannot be 0");
         require(_profitDepositor != address(0), "Profit depositor cannot be 0");
         require(owner != address(0), "Owner cannot be 0");
-       
+
         __Ownable_init(owner);
         __UUPSUpgradeable_init();
         __ReentrancyGuard_init();
@@ -130,4 +133,4 @@ contract ProfitDistributor is Initializable, OwnableUpgradeable, UUPSUpgradeable
      * @dev Required by UUPS upgradability. Only the owner can authorize upgrades.
      */
     function _authorizeUpgrade(address newImplementation) internal override onlyOwner {}
-} 
+}

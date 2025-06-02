@@ -9,16 +9,14 @@ contract AssetDeployer is Ownable {
 
     event ProxyDeployed(address proxy, address implementation);
 
-    function deployAssetToken(address implementation, string memory name, string memory symbol) external onlyOwner returns (address) {
-        bytes memory data = abi.encodeWithSignature(
-            "initialize(string,string,address)",
-            name,
-            symbol,
-            msg.sender
-        );
+    function deployAssetToken(address implementation, string memory name, string memory symbol)
+        external
+        onlyOwner
+        returns (address)
+    {
+        bytes memory data = abi.encodeWithSignature("initialize(string,string,address)", name, symbol, msg.sender);
         AssetTokenProxy proxy = new AssetTokenProxy(implementation, data);
         emit ProxyDeployed(address(proxy), implementation);
         return address(proxy);
     }
 }
-
