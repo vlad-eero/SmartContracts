@@ -9,18 +9,16 @@ RUN apt-get update && \
     apt-get install -y nodejs && \
     apt-get clean
 
-WORKDIR /app
+WORKDIR /workspaces/SmartContracts
 
 # Initialize a new Foundry project
 RUN forge init
 
 # Install OpenZeppelin and forge-std as dependencies
-RUN forge install OpenZeppelin/openzeppelin-contracts@v5.0.0 && \
-    forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.0 && \
-    forge install foundry-rs/forge-std
+# RUN forge install OpenZeppelin/openzeppelin-contracts@v5.0.0 && \
+#     forge install OpenZeppelin/openzeppelin-contracts-upgradeable@v5.0.0 && \
+#     forge install foundry-rs/forge-std@1.7.1
 
-# Add remappings for easier imports
-RUN echo "@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/\nforge-std/=lib/forge-std/src/" > remappings.txt
 
 # Keep container running
 CMD ["bash"]
