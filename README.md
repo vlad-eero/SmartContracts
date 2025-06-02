@@ -1,5 +1,10 @@
-# disertation-app
-## Dependencies
+# Solidity Smart Contracts
+
+## Installation
+
+1. Clone the repository:
+
+2. Install dependencies:
 
 The system uses the following main dependencies:
 
@@ -12,17 +17,12 @@ The system uses the following main dependencies:
 forge-std ^1.7.1
 ```
 
-## Installation
-
-1. Clone the repository:
-
-
-2. Install dependencies:
 ```bash
 forge install
 ```
 
 3. Compile contracts:
+
 ```bash
 forge build
 ```
@@ -44,6 +44,7 @@ disertation-app/
 The system includes a comprehensive test suite covering all functionalities:
 
 1. **Unit Tests**
+
 ```bash
 # Run all tests
 forge test
@@ -55,7 +56,6 @@ forge test -vv
 forge test --match-test test_DeployAssetToken
 ```
 
-
 # Project Notes
 
 This project implements a tokenized asset system with profit distribution capabilities. It consists of three main components:
@@ -63,22 +63,26 @@ This project implements a tokenized asset system with profit distribution capabi
 ## 1. Asset Token System
 
 ### AssetToken.sol
+
 An upgradeable ERC20 token that represents ownership of an asset
 
 Implements the UUPS (Universal Upgradeable Proxy Standard) pattern for upgradeability
 
 Key features:
+
 - Controlled minting and burning (only by owner)
 - Integration with a policy system that enforces transfer rules
 - Connection to a profit distributor that tracks token movements for reward calculations
 - Events for tracking mints, burns, and profit distributor updates
 
 ### AssetTokenProxy.sol
+
 A simple proxy contract that delegates calls to the implementation contract
 
 Uses OpenZeppelin's ERC1967Proxy as its base
 
 ### AssetDeployer.sol
+
 Factory contract for deploying new asset tokens
 
 Creates proxy instances pointing to an implementation contract
@@ -86,6 +90,7 @@ Creates proxy instances pointing to an implementation contract
 Initializes tokens with name, symbol, and owner
 
 ## 2. Policy System
+
 ### IAssetTokenPolicy.sol
 
 Interface defining the policy rules for token operations
@@ -104,6 +109,7 @@ Implementation of the policy interface with specific rules:
 ## 3. Profit Distribution System
 
 ### ProfitDistributor.sol
+
 Distributes USDC profits to token holders proportionally to their holdings
 
 Key features:
@@ -115,9 +121,11 @@ Key features:
 - Upgradeable using UUPS pattern
 
 ### ProfitDistributorProxy.sol
+
 Similar to AssetTokenProxy, delegates calls to the implementation
 
 ### ProfitDistributorDeployer.sol
+
 Factory for deploying profit distributor instances
 
 Creates and initializes proxy contracts
@@ -128,7 +136,7 @@ Creates and initializes proxy contracts
 
 The AssetDeployer creates a new token through a proxy pointing to the AssetToken implementation.
 
-## Policy Enforcement: 
+## Policy Enforcement:
 
 The token owner sets a policy contract that enforces rules on transfers:
 
@@ -143,26 +151,27 @@ The token owner sets a policy contract that enforces rules on transfers:
 - An authorized depositor can add USDC profits to the distributor
 - Token holders can claim their share of profits proportional to their holdings
 
-### Upgradeability 
+### Upgradeability
 
 Both the token and profit distributor use the UUPS pattern, allowing their logic to be upgraded while preserving state and addresses.
 
 # Technical Highlights
 
-## Proxy Pattern 
+## Proxy Pattern
 
 Uses OpenZeppelin's ERC1967 proxy implementation for upgradeability
 
 ## Security Features
+
 - Reentrancy protection in the profit distributor
 - Owner-only access control for sensitive operations
 - Policy-based transfer restrictions
 
-## High Precision 
+## High Precision
 
 Uses 1e18 precision for accurate profit calculations
 
-## Event Logging 
+## Event Logging
 
 Comprehensive events for tracking all important operations
 

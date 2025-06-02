@@ -1,0 +1,53 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+// README at: https://github.com/devcontainers/templates/tree/main/src/go
+{
+	"name": "solidity_dev",
+	"build": {
+		// set build context to repo root for installing tools
+		"context": "..",
+		"dockerfile": "Dockerfile"
+	},
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "NomicFoundation.hardhat-solidity",
+                "JuanBlanco.solidity",
+                "tintinweb.solidity-visual-auditor",
+                "ms-vscode.vscode-typescript-next",
+                "GitHub.copilot",
+                "esbenp.prettier-vscode",
+                "eamodio.gitlens",
+                "yzhang.markdown-all-in-one"
+            ],
+            "settings": {
+                "solidity.packageDefaultDependenciesContractsDirectory": "src",
+                "solidity.packageDefaultDependenciesDirectory": "lib",
+                "solidity.compileUsingRemoteVersion": "latest",
+                "solidity.formatter": "prettier",
+                "editor.formatOnSave": true,
+                "editor.formatOnPaste": true,
+                "editor.defaultFormatter": "esbenp.prettier-vscode",
+                "files.autoSave": "onFocusChange"
+            }
+        }
+    },
+    "features": {
+        "ghcr.io/devcontainers/features/node:1": {
+            "version": "18"
+        },
+        "ghcr.io/devcontainers/features/git:1": {}
+    },
+    "forwardPorts": [
+        8545
+    ],
+    "postCreateCommand": "forge install",
+    "privileged": true,
+    "mounts": [
+        "source=foundry-cache,target=/root/.foundry,type=volume",
+        "source=node_modules,target=${containerWorkspaceFolder}/node_modules,type=volume"
+    ],
+    "runArgs": [
+        "--env-file",
+        ".env"
+    ]
+}
