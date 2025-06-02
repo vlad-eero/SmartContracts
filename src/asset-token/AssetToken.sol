@@ -6,12 +6,20 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/access/OwnableUpgradeable.sol";
 import "../policy/IAssetTokenPolicy.sol";
+import "@openzeppelin/contracts-upgradeable/utils/ReentrancyGuardUpgradeable.sol";
+
+/**
+ * @dev Interface for ProfitDistributor to avoid using low-level calls
+ */
+interface IProfitDistributor {
+    function updateReward(address from, address to) external;
+}
 
 /**
  * @title AssetToken
  * @notice ERC20 upgradable token with strict policies for upgrade, mint, and burn. Only the owner can perform these actions.
  */
-contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, OwnableUpgradeable {
+contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, OwnableUpgradeable, ReentrancyGuardUpgradeable {
     address public profitDistributor;
     IAssetTokenPolicy public policy;
 
@@ -32,6 +40,7 @@ contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, Ownable
       __ERC20_init(_name, _symbol);
       __Ownable_init(owner);
       __UUPSUpgradeable_init();
+      __ReentrancyGuard_init();
     }
 
     /**
@@ -81,19 +90,26 @@ contract AssetToken is Initializable, ERC20Upgradeable, UUPSUpgradeable, Ownable
 
     /**
      * @dev Calls updateReward on the ProfitDistributor contract after every transfer, mint, or burn.
+     * Follows checks-effects-interactions pattern to prevent reentrancy attacks.
      */
-    function _update(address from, address to, uint256 amount) internal override {
+    function _update(address from, address to, uint256 amount) internal override nonReentrant {
+        // 1. Checks
         if (address(policy) != address(0)) {
             require(policy.canTransfer(from, to, amount), "Transfer not allowed by policy");
         }
-        if (profitDistributor != address(0)) {
-            (bool success, ) = profitDistributor.call(
-                abi.encodeWithSignature("updateReward(address,address)", from, to)
-            );
-            require(success, "ProfitDistributor update failed");
-            emit ProfitDistributorRewardUpdated(from, to, amount);
-        }
+        
+        // 2. Effects - update internal state
         super._update(from, to, amount);
+        
+        // 3. Interactions - external calls after state changes
+        if (profitDistributor != address(0)) {
+            try IProfitDistributor(profitDistributor).updateReward(from, to) {
+                emit ProfitDistributorRewardUpdated(from, to, amount);
+            } catch {
+                revert("ProfitDistributor update failed");
+            }
+        }
+        
         if (address(policy) != address(0)) {
             policy.recordReceived(from, to);
         }

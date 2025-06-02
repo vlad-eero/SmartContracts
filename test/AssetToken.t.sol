@@ -4,6 +4,13 @@ pragma solidity ^0.8.20;
 import {Test, console2} from "forge-std/Test.sol";
 import {AssetToken} from "../src/asset-token/AssetToken.sol";
 
+// Mock contract for ProfitDistributor
+contract MockProfitDistributor {
+    function updateReward(address, address) external pure returns (bool) {
+        return true;
+    }
+}
+
 contract AssetTokenTest is Test {
     AssetToken public assetToken;
     address public owner;
@@ -111,9 +118,12 @@ contract AssetTokenTest is Test {
 
     // Test pentru ProfitDistributor
     function test_ProfitDistributor() public {
+        // Create a mock ProfitDistributor contract that implements updateReward
+        MockProfitDistributor mockProfitDistributor = new MockProfitDistributor();
+        
         // Test transfer cu ProfitDistributor setat
         vm.startPrank(owner);
-        assetToken.setProfitDistributor(addr1);
+        assetToken.setProfitDistributor(address(mockProfitDistributor));
         uint256 transferAmount = 1000;
         assetToken.mint(owner, transferAmount);
         
@@ -123,7 +133,7 @@ contract AssetTokenTest is Test {
         assetToken.transfer(addr2, transferAmount);
         
         // Verificăm că ProfitDistributor a fost notificat
-        assertEq(assetToken.profitDistributor(), addr1);
+        assertEq(assetToken.profitDistributor(), address(mockProfitDistributor));
         vm.stopPrank();
     }
 
