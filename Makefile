@@ -17,3 +17,6 @@ test:
 clean:
 	forge clean
 	rm -rf lib/
+
+install:
+	forge install
