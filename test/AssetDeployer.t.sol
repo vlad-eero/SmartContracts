@@ -30,7 +30,7 @@ contract AssetDeployerTest is Test {
     }
 
     // Test pentru deployment
-    function test_Deployment() public view {
+    function test_Deployment() public {
         assertEq(assetDeployer.owner(), owner);
     }
 

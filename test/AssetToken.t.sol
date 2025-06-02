@@ -30,7 +30,7 @@ contract AssetTokenTest is Test {
     }
 
     // Test pentru inițializare
-    function test_Initialization() public view {
+    function test_Initialization() public {
         assertEq(assetToken.name(), "Test Token");
         assertEq(assetToken.symbol(), "TEST");
         assertEq(assetToken.balanceOf(owner), 0);

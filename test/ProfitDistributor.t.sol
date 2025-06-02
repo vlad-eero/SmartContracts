@@ -6,6 +6,9 @@ import {ProfitDistributor} from "../src/profit-distributor/ProfitDistributor.sol
 import {MockERC20} from "./MockERC20.sol";
 
 contract ProfitDistributorTest is Test {
+    // Define events from ProfitDistributor to use in tests
+    event ProfitReceived(address indexed from, uint256 amount);
+    event ProfitClaimed(address indexed to, uint256 amount);
     ProfitDistributor public profitDistributor;
     MockERC20 public shares;
     MockERC20 public usdc;
@@ -47,7 +50,7 @@ contract ProfitDistributorTest is Test {
         usdc.approve(address(profitDistributor), amount);
         
         vm.expectEmit(true, true, true, true);
-        emit ProfitDistributor.ProfitReceived(profitDepositor, amount);
+        emit ProfitReceived(profitDepositor, amount);
         profitDistributor.depositProfit(amount);
         
         assertEq(profitDistributor.totalReceived(), amount);
@@ -78,7 +81,7 @@ contract ProfitDistributorTest is Test {
         vm.startPrank(user1);
         uint256 earned = profitDistributor.earned(user1);
         vm.expectEmit(true, true, true, true);
-        emit ProfitDistributor.ProfitClaimed(user1, earned);
+        emit ProfitClaimed(user1, earned);
         profitDistributor.claim();
         assertEq(usdc.balanceOf(user1), earned);
         vm.stopPrank();
