@@ -2,3 +2,4 @@ lib/*
 cache/*
 node_modules/*
 out/*
+broadcast/*
