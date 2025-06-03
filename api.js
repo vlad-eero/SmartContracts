@@ -85,6 +85,7 @@ app.post("/api/token/mint", async (req, res) => {
       console.error("Mint error:", mintError.message);
       res.json({
         success: false,
+        error: error.message,
         txHash: "0x" + "0".repeat(64),
         message: `Minted ${amount} tokens to ${address} (mock)`,
         note: "Real transaction failed, returning mock response",
@@ -114,8 +115,7 @@ app.post("/api/profit/deposit", async (req, res) => {
       // Return mock success if real transaction fails
       res.json({
         success: false,
-        txHash: "0x" + "0".repeat(64),
-        message: `Deposited ${amount} USDC as profit (mock)`,
+        error: error.message,
       });
     }
   } catch (error) {
@@ -136,8 +136,7 @@ app.get("/api/profit/earned/:address", async (req, res) => {
       // Return a clean response without error details
       res.json({
         success: false,
-        address,
-        earned: "0.0",
+        error: error.message,
       });
     }
   } catch (error) {
@@ -169,6 +168,7 @@ app.post("/api/profit/claim", async (req, res) => {
       // Return mock success if real transaction fails
       res.json({
         success: false,
+        error: error.message,
         txHash: "0x" + "0".repeat(64),
         message: `Claimed profit for ${address} (mock)`,
       });
