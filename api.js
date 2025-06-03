@@ -84,7 +84,7 @@ app.post("/api/token/mint", async (req, res) => {
       // If real minting fails, return mock success
       console.error("Mint error:", mintError.message);
       res.json({
-        success: true,
+        success: false,
         txHash: "0x" + "0".repeat(64),
         message: `Minted ${amount} tokens to ${address} (mock)`,
         note: "Real transaction failed, returning mock response",
@@ -108,14 +108,14 @@ app.post("/api/profit/deposit", async (req, res) => {
       res.json({
         success: true,
         txHash: tx.hash,
-        message: `Deposited ${amount} USDC as profit`
+        message: `Deposited ${amount} USDC as profit`,
       });
     } catch (error) {
       // Return mock success if real transaction fails
       res.json({
-        success: true,
+        success: false,
         txHash: "0x" + "0".repeat(64),
-        message: `Deposited ${amount} USDC as profit (mock)`
+        message: `Deposited ${amount} USDC as profit (mock)`,
       });
     }
   } catch (error) {
@@ -130,13 +130,14 @@ app.get("/api/profit/earned/:address", async (req, res) => {
       const earned = await profitDistributor.earned(address);
       res.json({
         address,
-        earned: ethers.utils.formatUnits(earned, 6)
+        earned: ethers.utils.formatUnits(earned, 6),
       });
     } catch (error) {
       // Return a clean response without error details
       res.json({
+        success: false,
         address,
-        earned: "0.0"
+        earned: "0.0",
       });
     }
   } catch (error) {
@@ -162,14 +163,14 @@ app.post("/api/profit/claim", async (req, res) => {
       res.json({
         success: true,
         txHash: tx.hash,
-        message: `Claimed profit for ${address}`
+        message: `Claimed profit for ${address}`,
       });
     } catch (error) {
       // Return mock success if real transaction fails
       res.json({
-        success: true,
+        success: false,
         txHash: "0x" + "0".repeat(64),
-        message: `Claimed profit for ${address} (mock)`
+        message: `Claimed profit for ${address} (mock)`,
       });
     }
   } catch (error) {
