@@ -75,6 +75,39 @@ contract ProfitDistributor is Initializable, OwnableUpgradeable, UUPSUpgradeable
         profitDepositor = _depositor;
     }
 
+
+    /*
+
+    The scope of the depositProfit function is to distribute USDC profit to holders of a share token (AssetToken) proportionally. 
+    Specifically, it:
+        - Receives USDC tokens from an authorized depositor (the profitDepositor address)
+        - Calculates how much profit each share token is entitled to by dividing the deposited amount by the total supply of shares
+        - Updates the global accounting variable profitPerTokenStored to track accumulated profit per token
+        - Updates the total amount of profit received by the contract
+        - Emits an event to log the profit deposit
+        - This function is a core part of the profit distribution mechanism in the contract, allowing an authorized entity to deposit profits 
+            that will later be claimable by shareholders based on their proportional ownership of the share tokens.
+        - The function doesn't directly distribute tokens to shareholders - it only updates the accounting system. 
+            Users need to call the separate claim() function to actually receive their share of the profits.
+
+    Use
+
+    // Assuming you have the ProfitDistributor contract instance
+    ProfitDistributor profitDistributor = ProfitDistributor(profitDistributorAddress);
+
+    // 1. Make sure you're the authorized profit depositor
+    // This can be checked with: require(profitDistributor.profitDepositor() == msg.sender);
+
+    // 2. Approve the contract to spend your USDC
+    IERC20 usdc = IERC20(profitDistributor.usdc());
+    uint256 amountToDeposit = 1000 * 10**6; // 1000 USDC (assuming 6 decimals)
+    usdc.approve(address(profitDistributor), amountToDeposit);
+
+    // 3. Call the depositProfit function
+    profitDistributor.depositProfit(amountToDeposit);
+
+    */
+
     /**
      * @notice Deposits USDC profit to be distributed to share holders.
      * @dev Only callable by the authorized profit depositor. Requires prior approval of USDC.
